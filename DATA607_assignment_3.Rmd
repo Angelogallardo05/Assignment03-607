@@ -1,0 +1,109 @@
+---
+title: "DATA 607 HW #3"
+output: html_document
+date: "2024-02-11"
+---
+
+```{r}
+library(tidyverse)
+
+#1
+
+# load csv from github
+majors_list <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/majors-list.csv")
+
+
+# search  for DATA OR STATISTICS
+pattern <- "DATA|STATISTICS"
+
+# find the rows with matches
+matching_rows <- grepl(pattern, majors_list$Major, ignore.case = TRUE)
+
+# extract
+majors <- majors_list[matching_rows, ]
+
+print(majors)
+
+
+
+
+#2
+
+
+strIn <- '[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+[13] "olive"        "salal berry"'
+
+
+# extract quoted strings
+matches <- gregexpr("\"[^\"]+\"", strIn)
+
+# extract matcehd strings
+extracted_strings <- regmatches(strIn, matches)[[1]]
+
+#concatenate strings
+strOut <- paste(extracted_strings, collapse = ", ")
+
+print(strOut)
+
+#add commas in between quotes
+commas <- gsub('"', '', strOut)
+               
+print(commas)               
+
+
+# remove quotes
+quotes <- gsub('"', '', commas)
+
+print(quotes)
+
+# create list
+list <- as.list(str_split(quotes,",")[[1]])
+
+print(list)
+
+
+# trime white spaces to format as expected answer
+final <- trimws(list)
+
+print(final)
+
+
+# load expected output
+
+y = c("bell pepper", "bilberry", "blackberry", "blood orange", "blueberry", "cantaloupe", "chili pepper", "cloudberry", "elderberry", "lime", "lychee", "mulberry", "olive", "salal berry")
+
+# answer matches expected output
+y == final
+
+
+
+
+#3
+
+#(.)\1\1 = a character that appears three times in a row such as aaa
+#"(.)(.)\\2\\1" =  a couple of characters and then the same characters in reversed such as 1221
+#(..)\1 = any characters repeated such as 1212
+#"(.).\\1.\\1" = a character, then another character, the original character, a different character, and then th original character  such as 12131
+#"(.)(.)(.).*\\3\\2\\1" = three characters and then a character or no character and then the same three characters in reversed.
+# such as 1234321
+
+
+#4
+
+
+#load  DATA that start and end with the same character
+str_subset(words, "^(.)((.*\\1$)|\\1?$)")
+
+
+
+# data with repeating letters
+str_subset(words, "([A-Za-z][A-Za-z]).*\\1")
+
+
+#words with one letter with three repeating characters
+str_subset(words, "([a-z]).*\\1.*\\1")
+
+```
+
